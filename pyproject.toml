@@ -1,9 +1,10 @@
 [tool.poetry]
-name = "agentic-rag"
+name = "llama_index_examples"
 version = "0.1.0"
 description = ""
-authors = ["Abhishek Shivkumar <abhishek.shivkumar@element.com>"]
+authors = ["Abhishek Shivkumar <abhisheksgumadi@gmail.com>"]
 readme = "README.md"
+packages = [{ include = "llama_index_examples" }]
 
 [tool.poetry.dependencies]
 python = "^3.12"
@@ -195,6 +196,7 @@ black = "^25.1.0"
 llama-index-tools-duckduckgo = "^0.3.0"
 llama-index-tools-bing-search = "^0.3.0"
 llama-index-tools-tavily-research = "^0.3.0"
+llama-index-tools-mcp = "^0.2.5"
 
 
 [build-system]
