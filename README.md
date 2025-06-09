@@ -1,46 +1,91 @@
-# Agentic RAG
+# LlamaIndex Agents
 
-This project is inspired by and borrows heavily from the excellent documentation and examples provided by LlamaIndex. Many of the architectural patterns and implementation details are adapted from their comprehensive guides on building advanced RAG systems.
+A collection of advanced AI agent systems built with LlamaIndex, demonstrating the power of multi-agent workflows for complex tasks. This repository contains implementations of sophisticated agent systems for web research and RAG (Retrieval-Augmented Generation) applications. All implementations are based on the examples and patterns found across different pages in the LlamaIndex documentation.
 
-A powerful RAG (Retrieval-Augmented Generation) system that uses a multi-agent architecture to provide accurate and context-aware responses to queries about documents.
+## Projects
 
-## Overview
+### 1. Web Research Agent System
+A multi-agent system that performs automated web research and report generation. The system employs four specialized agents working in sequence to produce comprehensive, well-researched reports on any given topic.
 
-This system implements an advanced RAG architecture that combines multiple specialized agents to handle different aspects of document processing and querying. The system is built on top of LlamaIndex and uses Ollama for LLM capabilities.
+Key features:
+- Automated web research using Tavily API
+- Multi-agent collaboration
+- Structured report generation
+- Quality review process
 
-## Architecture
+[View Web Research Documentation](src/web_research/README.md)
 
-The system consists of several key components:
+### 2. Agentic RAG System
+An advanced RAG implementation that combines the power of LlamaIndex with agent-based workflows for enhanced information retrieval and generation.
 
-### 1. Document Processing
-- `DocumentLoader`: Handles loading and preprocessing of documents from a specified directory
-- Uses UnstructuredReader to parse various document formats
-- Splits documents into manageable chunks for processing
+Key features:
+- Custom RAG pipeline
+- Agent-based query processing
+- Enhanced context retrieval
+- Flexible document handling
 
-### 2. Agent Architecture
-The system implements a hierarchical agent structure:
+[View Agentic RAG Documentation](src/agentic_rag/README.md)
 
-#### Document Agents
-- Each document gets its own specialized agent
-- Two types of query engines per document:
-  - Vector-based query engine for specific fact retrieval
-  - Summary-based query engine for high-level document understanding
-- Agents are persisted to disk for efficient reuse
+## Prerequisites
 
-#### Top-Level Agent
-- Orchestrates the document agents
-- Uses a custom object retriever to find relevant tools
-- Implements Cohere reranking for improved result quality
-- Provides a unified interface for querying across all documents
+- Python 3.8+
+- Ollama running locally
+- Required API keys (Tavily, etc.)
 
-### 3. Key Features
-- Asynchronous processing for better performance
-- Persistent storage of indices and summaries
-- Intelligent document summarization
-- Multi-level retrieval system
-- Tool-based architecture for extensibility
+## Installation
 
-## Usage
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/llamaindex_agents.git
+cd llamaindex_agents
+```
 
-1. Place your documents in the `./documents/` directory
-2. Run the main script using `python src/agentic_rag.py`
+2. Install dependencies:
+```bash
+pip install -r requirements.txt
+```
+
+3. Set up environment variables:
+```bash
+export TAVILY_API_KEY="your-tavily-api-key"
+# Add other required API keys
+```
+
+## Project Structure
+
+```
+llamaindex_agents/
+├── src/
+│   ├── web_research/
+│   │   ├── agents/
+│   │   ├── agentic_workflow.py
+│   │   ├── config.py
+│   │   └── README.md
+│   └── agentic_rag/
+│       ├── llm_config.py
+│       ├── config.py
+│       └── README.md
+├── requirements.txt
+└── README.md
+```
+
+## Getting Started
+
+Each project in this repository is self-contained and can be run independently. Please refer to the individual project READMEs for specific setup and usage instructions:
+
+- [Web Research System Setup](src/web_research/README.md)
+- [Agentic RAG System Setup](src/agentic_rag/README.md)
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Acknowledgments
+
+- [LlamaIndex](https://github.com/run-llama/llama_index) for the excellent framework
+- [Ollama](https://github.com/ollama/ollama) for local LLM support
+- [Tavily](https://tavily.com/) for web search capabilities
