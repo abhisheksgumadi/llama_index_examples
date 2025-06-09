@@ -1,3 +1,59 @@
+
+```mermaid
+graph TD
+    subgraph "User Interface"
+        UI[User Query]
+    end
+
+    subgraph "Agentic RAG System"
+        subgraph "Query Processing"
+            QP[Query Processor]
+            QE[Query Enhancement]
+        end
+
+        subgraph "Document Processing"
+            DP[Document Loader]
+            DE[Document Embedder]
+            VS[Vector Store]
+        end
+
+        subgraph "Retrieval & Generation"
+            RT[Retriever]
+            CT[Context Builder]
+            LLM[LLM with Qwen2.5]
+        end
+
+        subgraph "Response Generation"
+            RG[Response Generator]
+            RF[Response Formatter]
+        end
+    end
+
+    UI --> QP
+    QP --> QE
+    QE --> RT
+    DP --> DE
+    DE --> VS
+    VS --> RT
+    RT --> CT
+    CT --> LLM
+    LLM --> RG
+    RG --> RF
+    RF --> UI
+
+    style UI fill:#f9f,stroke:#333,stroke-width:2px
+    style QP fill:#bbf,stroke:#333,stroke-width:2px
+    style QE fill:#bbf,stroke:#333,stroke-width:2px
+    style DP fill:#bfb,stroke:#333,stroke-width:2px
+    style DE fill:#bfb,stroke:#333,stroke-width:2px
+    style VS fill:#bfb,stroke:#333,stroke-width:2px
+    style RT fill:#fbb,stroke:#333,stroke-width:2px
+    style CT fill:#fbb,stroke:#333,stroke-width:2px
+    style LLM fill:#fbb,stroke:#333,stroke-width:2px
+    style RG fill:#f9f,stroke:#333,stroke-width:2px
+    style RF fill:#f9f,stroke:#333,stroke-width:2px
+```
+
 # Agentic RAG
 
 This project is inspired by and borrows heavily from the excellent documentation and examples provided by LlamaIndex. Many of the architectural patterns and implementation details are adapted from their comprehensive guides on building advanced RAG systems.
