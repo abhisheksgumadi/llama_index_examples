@@ -3033,19 +3033,19 @@ llama-index-core = ">=0.12.0,<0.13"
 
 [[package]]
 name = "llama-index-llms-ollama"
-version = "0.5.6"
+version = "0.6.2"
 description = "llama-index llms ollama integration"
 optional = false
 python-versions = "<4.0,>=3.9"
 groups = ["main"]
 files = [
-    {file = "llama_index_llms_ollama-0.5.6-py3-none-any.whl", hash = "sha256:8c17136d341ef8fe0e9efa7e31b65664ade90c142697b25b337b0c197ab29d05"},
-    {file = "llama_index_llms_ollama-0.5.6.tar.gz", hash = "sha256:44388cbfaae2b9572f6ea6734c07015c772823fbe6d2cb26c7dfe34fae51ddc5"},
+    {file = "llama_index_llms_ollama-0.6.2-py3-none-any.whl", hash = "sha256:b714311c3a1e3e5c9d9d2a46c1c12cc3e6865e8b81f1863412da41c1725a1144"},
+    {file = "llama_index_llms_ollama-0.6.2.tar.gz", hash = "sha256:1be4081f0ba9c9dd3b5d270c2e8009c256b3b6a1312cb38a0c724dba8bac1304"},
 ]
 
 [package.dependencies]
 llama-index-core = ">=0.12.4,<0.13"
-ollama = ">=0.4.3"
+ollama = ">=0.5.1"
 
 [[package]]
 name = "llama-index-llms-openai"
@@ -8305,4 +8305,4 @@ cffi = ["cffi (>=1.11)"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.12"
-content-hash = "3743331774d8de920e7dfedef583352fed2aa339f833a5028da72f8b5f736634"
+content-hash = "fba6600508bf89be2f62a01f300eedf1cc40c534f4c5df72a2daafbb74ce6f4a"

@@ -182,7 +182,6 @@ ipython = "^9.0.2"
 llama-index = "^0.12.24"
 llama-index-vector-stores-chroma = "^0.4.1"
 llama-index-embeddings-langchain = "^0.3.0"
-llama-index-llms-ollama = "^0.5.3"
 pypdf2 = "^3.0.1"
 llama-index-core = "^0.12.37"
 llama-index-llms-openai = "^0.3.42"
@@ -198,6 +197,7 @@ llama-index-tools-bing-search = "^0.3.0"
 llama-index-tools-tavily-research = "^0.3.0"
 llama-index-tools-mcp = "^0.2.5"
 fastmcp = "^2.7.1"
+llama-index-llms-ollama = "^0.6.2"
 
 
 [build-system]
