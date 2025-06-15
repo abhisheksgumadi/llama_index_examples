@@ -1,5 +1,6 @@
 from llama_index.core.agent.workflow import FunctionAgent
 
+
 def create_research_planner() -> FunctionAgent:
     return FunctionAgent(
         name="ResearchPlanner",
@@ -9,5 +10,5 @@ def create_research_planner() -> FunctionAgent:
         2. Generate 5 search queries per subtopic
         3. Create report outline with sections. You then hand off the control to the WebResearcher to search the web for information on the topic.""",
         tools=[],
-        can_handoff_to=["WebResearcher"]
-    ) 
+        can_handoff_to=["WebResearcher"],
+    )

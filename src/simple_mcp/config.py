@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 
+
 @dataclass
 class LLMConfigParams:
     DEFAULT_MODEL: str = "qwen2.5:14b-instruct-q4_K_M"
@@ -8,5 +9,6 @@ class LLMConfigParams:
     IS_FUNCTION_CALLING_MODEL: bool = True
     MCP_SERVER_URL: str = "http://127.0.0.1:8000/sse"
 
+
 # Create a singleton instance
-config = LLMConfigParams() 
+config = LLMConfigParams()

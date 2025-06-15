@@ -1,6 +1,11 @@
 from llama_index.core import Settings
 from llama_index.llms.ollama import Ollama
-from llama_index.core.agent.workflow import AgentWorkflow, AgentOutput, ToolCall, ToolCallResult
+from llama_index.core.agent.workflow import (
+    AgentWorkflow,
+    AgentOutput,
+    ToolCall,
+    ToolCallResult,
+)
 from llama_index.tools.tavily_research.base import TavilyToolSpec
 from llama_index.core.workflow import Context
 import asyncio
@@ -10,6 +15,7 @@ from web_research.agents.web_researcher import create_web_researcher
 from web_research.agents.report_writer import create_report_writer
 from web_research.agents.quality_reviewer import create_quality_reviewer
 from llama_index.core.workflow import JsonPickleSerializer, JsonSerializer
+
 
 async def main():
     Settings.llm = Ollama(model=config.DEFAULT_MODEL)
@@ -28,7 +34,7 @@ async def main():
             "research_notes": {},
             "report_content": "Not written yet.",
             "review": "Review required.",
-        }
+        },
     )
 
     # Run workflow
@@ -63,8 +69,8 @@ async def main():
             print(f"Calling Tool: {event.tool_name}")
             print(f"  With arguments: {event.tool_kwargs}")
 
-
     print(workflow.initial_state)
-    
+
+
 if __name__ == "__main__":
     asyncio.run(main())
