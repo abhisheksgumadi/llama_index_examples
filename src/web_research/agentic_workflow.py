@@ -18,12 +18,13 @@ from llama_index.core.workflow import JsonPickleSerializer, JsonSerializer
 
 
 async def main():
-    Settings.llm = Ollama(model=config.DEFAULT_MODEL,
-                          timeout=300,
-                          temperature=0.7,
-                          context_window=4096,
-                          num_ctx=4096)
-    
+    Settings.llm = Ollama(
+        model=config.DEFAULT_MODEL,
+        timeout=300,
+        temperature=0.7,
+        context_window=4096,
+        num_ctx=4096,
+    )
 
     # Create agents
     research_planner = create_research_planner()
