@@ -79,7 +79,7 @@ class ReviewEvent(Event):
 @retry(
     stop=stop_after_attempt(3),
     wait=wait_exponential(multiplier=1, min=4, max=10),
-    reraise=True
+    reraise=True,
 )
 async def search_web_with_retry(query: str) -> str:
     """Search the web for information using Tavily API with retry logic."""
@@ -203,20 +203,20 @@ class DeepResearchWithReflectionWorkflow(Workflow):
             result = await self.answer_agent.run(
                 user_msg=f"Research and answer: {ev.question}"
             )
-            
+
             ctx.write_event_to_stream(
                 ProgressEvent(
                     msg=f"Answered question: {ev.question}\nAnswer: {str(result)}"
                 )
             )
-            
+
             return AnswerEvent(question=ev.question, answer=str(result))
         except httpx.ReadTimeout:
             print(f"Timeout while answering question: {ev.question}")
             # Return a placeholder answer in case of timeout
             return AnswerEvent(
                 question=ev.question,
-                answer="Unable to generate a complete answer due to timeout. Please try again with a more specific question."
+                answer="Unable to generate a complete answer due to timeout. Please try again with a more specific question.",
             )
         except Exception as e:
             print(f"Error while answering question: {str(e)}")
@@ -279,12 +279,12 @@ async def main():
             report_agent=report_agent,
             review_agent=review_agent,
         )
-        
+
         # Stream progress events
         async for ev in handler.stream_events():
             if isinstance(ev, ProgressEvent):
                 print(ev.msg)
-        
+
         final_result = await handler
         print("\nFinal Research Report:")
         print("=" * 80)
