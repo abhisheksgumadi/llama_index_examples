@@ -1,5 +1,39 @@
 # Deep Research System
 
+```mermaid
+graph TD
+    A[Start] --> B[DeepResearchWithReflectionWorkflow]
+    B --> C[Setup]
+    C --> D[Generate Questions]
+    D --> E[Answer Questions]
+    E --> F[Write Report]
+    F --> G{Review Report}
+    G -->|Needs Improvement| H[Generate Additional Questions]
+    H --> E
+    G -->|Acceptable| I[End]
+
+    subgraph Agents
+        J[Question Agent]
+        K[Answer Agent]
+        L[Report Agent]
+        M[Review Agent]
+    end
+
+    subgraph Events
+        N[GenerateEvent]
+        O[QuestionEvent]
+        P[AnswerEvent]
+        Q[ReviewEvent]
+        R[FeedbackEvent]
+        S[ProgressEvent]
+    end
+
+    D --> J
+    E --> K
+    F --> L
+    G --> M
+```
+
 This is heavily inspired from excellent documentations and tutorials from LlamaIndex. A sophisticated automated research workflow system that leverages multiple AI agents to conduct comprehensive research on any given topic. The system uses LlamaIndex's workflow capabilities along with Ollama for LLM processing and Tavily for web search functionality.
 
 ## Overview
