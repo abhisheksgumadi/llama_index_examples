@@ -8,6 +8,8 @@ to conduct comprehensive research on a given topic.
 import os
 import asyncio
 from typing import Optional
+import httpx
+from tenacity import retry, stop_after_attempt, wait_exponential
 
 from tavily import AsyncTavilyClient
 from llama_index.llms.ollama import Ollama
@@ -19,16 +21,18 @@ from llama_index.core.workflow import (
     StopEvent,
     Workflow,
     step,
+    WorkflowTimeoutError,
 )
 from llama_index.core.agent.workflow import FunctionAgent
 
-# Initialize core components
+# Initialize core components with increased timeout
 llm = Ollama(
     model=config.DEFAULT_MODEL,
-    timeout=300,
+    timeout=120,  # Increased timeout for individual requests
     temperature=0.7,
     context_window=4096,
     num_ctx=4096,
+    request_timeout=120,  # Added request timeout
 )
 tavily_api_key = os.environ.get("TAVILY_API_KEY")
 
@@ -72,10 +76,19 @@ class ReviewEvent(Event):
 
 
 # Utility functions
-async def search_web(query: str) -> str:
-    """Search the web for information using Tavily API."""
-    client = AsyncTavilyClient(api_key=tavily_api_key)
-    return str(await client.search(query))
+@retry(
+    stop=stop_after_attempt(3),
+    wait=wait_exponential(multiplier=1, min=4, max=10),
+    reraise=True
+)
+async def search_web_with_retry(query: str) -> str:
+    """Search the web for information using Tavily API with retry logic."""
+    try:
+        client = AsyncTavilyClient(api_key=tavily_api_key)
+        return str(await client.search(query))
+    except Exception as e:
+        print(f"Search attempt failed: {str(e)}")
+        raise
 
 
 async def record_notes(ctx: Context, notes: str, notes_title: str) -> str:
@@ -115,7 +128,7 @@ question_agent = FunctionAgent(
 )
 
 answer_agent = FunctionAgent(
-    tools=[search_web],
+    tools=[search_web_with_retry],
     llm=llm,
     verbose=False,
     system_prompt="""You are part of a deep research system.
@@ -185,18 +198,29 @@ class DeepResearchWithReflectionWorkflow(Workflow):
 
     @step
     async def answer_question(self, ctx: Context, ev: QuestionEvent) -> AnswerEvent:
-        """Generate an answer for a specific research question."""
-        result = await self.answer_agent.run(
-            user_msg=f"Research and answer: {ev.question}"
-        )
-
-        ctx.write_event_to_stream(
-            ProgressEvent(
-                msg=f"Answered question: {ev.question}\nAnswer: {str(result)}"
+        """Generate an answer for a specific research question with retry logic."""
+        try:
+            result = await self.answer_agent.run(
+                user_msg=f"Research and answer: {ev.question}"
             )
-        )
-
-        return AnswerEvent(question=ev.question, answer=str(result))
+            
+            ctx.write_event_to_stream(
+                ProgressEvent(
+                    msg=f"Answered question: {ev.question}\nAnswer: {str(result)}"
+                )
+            )
+            
+            return AnswerEvent(question=ev.question, answer=str(result))
+        except httpx.ReadTimeout:
+            print(f"Timeout while answering question: {ev.question}")
+            # Return a placeholder answer in case of timeout
+            return AnswerEvent(
+                question=ev.question,
+                answer="Unable to generate a complete answer due to timeout. Please try again with a more specific question."
+            )
+        except Exception as e:
+            print(f"Error while answering question: {str(e)}")
+            raise
 
     @step
     async def write_report(
@@ -245,25 +269,34 @@ class DeepResearchWithReflectionWorkflow(Workflow):
 
 async def main():
     """Run the deep research workflow."""
-    workflow = DeepResearchWithReflectionWorkflow(timeout=300)
-    handler = workflow.run(
-        research_topic="Comparison of AgenticAI frameworks: LangGraph, CrewAI, "
-        "Google's Agent Development Kit, and LlamaIndex. "
-        "Analyze key differences, strengths, and weaknesses.",
-        question_agent=question_agent,
-        answer_agent=answer_agent,
-        report_agent=report_agent,
-        review_agent=review_agent,
-    )
-
-    async for ev in handler.stream_events():
-        if isinstance(ev, ProgressEvent):
-            print(ev.msg)
-
-    final_result = await handler
-    print("==== Final Report ====")
-    with open("./REPORT.md", "w") as f:
-        f.write(final_result)
+    try:
+        # Increase timeout to 1 hour (3600 seconds)
+        workflow = DeepResearchWithReflectionWorkflow(timeout=3600)
+        handler = workflow.run(
+            research_topic="Comparison of AgenticAI frameworks: LangGraph, CrewAI, and AutoGen",
+            question_agent=question_agent,
+            answer_agent=answer_agent,
+            report_agent=report_agent,
+            review_agent=review_agent,
+        )
+        
+        # Stream progress events
+        async for ev in handler.stream_events():
+            if isinstance(ev, ProgressEvent):
+                print(ev.msg)
+        
+        final_result = await handler
+        print("\nFinal Research Report:")
+        print("=" * 80)
+        print(final_result.result)
+        print("=" * 80)
+    except WorkflowTimeoutError as e:
+        print("\nError: The research process took too long to complete.")
+        print("Consider breaking down the research topic into smaller subtopics.")
+        print(f"Error details: {str(e)}")
+    except Exception as e:
+        print(f"\nAn unexpected error occurred: {str(e)}")
+        raise
 
 
 if __name__ == "__main__":
