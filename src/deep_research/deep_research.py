@@ -23,7 +23,13 @@ from llama_index.core.workflow import (
 from llama_index.core.agent.workflow import FunctionAgent
 
 # Initialize core components
-llm = Ollama(model=config.DEFAULT_MODEL)
+llm = Ollama(
+    model=config.DEFAULT_MODEL,
+    timeout=300,
+    temperature=0.7,
+    context_window=4096,
+    num_ctx=4096,
+)
 tavily_api_key = os.environ.get("TAVILY_API_KEY")
 
 

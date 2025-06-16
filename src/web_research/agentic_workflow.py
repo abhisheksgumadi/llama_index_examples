@@ -9,16 +9,22 @@ from llama_index.core.agent.workflow import (
 from llama_index.tools.tavily_research.base import TavilyToolSpec
 from llama_index.core.workflow import Context
 import asyncio
-from web_research.config import config
-from web_research.agents.research_planner import create_research_planner
-from web_research.agents.web_researcher import create_web_researcher
-from web_research.agents.report_writer import create_report_writer
-from web_research.agents.quality_reviewer import create_quality_reviewer
+from config import config
+from agents.research_planner import create_research_planner
+from agents.web_researcher import create_web_researcher
+from agents.report_writer import create_report_writer
+from agents.quality_reviewer import create_quality_reviewer
 from llama_index.core.workflow import JsonPickleSerializer, JsonSerializer
 
 
 async def main():
-    Settings.llm = Ollama(model=config.DEFAULT_MODEL)
+    Settings.llm = Ollama(
+        model=config.DEFAULT_MODEL,
+        timeout=300,
+        temperature=0.7,
+        context_window=4096,
+        num_ctx=4096,
+    )
 
     # Create agents
     research_planner = create_research_planner()
